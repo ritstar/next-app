@@ -6,14 +6,13 @@ import axios from 'axios';
 import Image from 'next/image';
 import docLogo from '../public/docx_icon.svg.png';
 import docxLogo from '../public/docx_icon.svg.png';
+require('dotenv').config();
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
   const token = process.env.BEARER_TOKEN;
-
-  console.log(token);
 
   const onDrop = useCallback((acceptedFiles: string | any[]) => {
     if (acceptedFiles.length > 0) {
