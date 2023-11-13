@@ -12,7 +12,6 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
-  const token = process.env.BEARER_TOKEN;
 
   const onDrop = useCallback((acceptedFiles: string | any[]) => {
     if (acceptedFiles.length > 0) {
@@ -39,7 +38,7 @@ export default function Home() {
         formData,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${process.env.BEARER_TOKEN}`,
             'Content-Type': 'multipart/form-data',
           },
         }
