@@ -34,7 +34,7 @@ export default function Home() {
       formData.append('file', file);
 
       const response = await axios.post(
-        'https://talented-dog-panama-hat.cyclic.app/convert',
+        `${process.env.CYCLIC_URL}/convert`,
         formData,
         {
           headers: {
