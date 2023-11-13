@@ -13,6 +13,8 @@ export default function Home() {
   const [downloadUrl, setDownloadUrl] = useState(null);
   const token = process.env.BEARER_TOKEN;
 
+  console.log(token);
+
   const onDrop = useCallback((acceptedFiles: string | any[]) => {
     if (acceptedFiles.length > 0) {
       setFile(acceptedFiles[0]);
