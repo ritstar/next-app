@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.2.9",
     "axios": "^1.6.1",
     "csv-parser": "^3.0.0",
     "csv-writer": "^1.6.0",
