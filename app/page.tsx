@@ -57,7 +57,7 @@ export default function Home() {
           }
         );
 
-        setDownloadUrl(response.data.downloadUrl);
+        setDownloadUrl(response.data.url);
         setIsLoading(false);
       } catch (err) {
         if(err instanceof Error){
