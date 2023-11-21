@@ -44,7 +44,7 @@ export default function Home() {
       setIsLoading(true);
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('format', selectedFormat);
+      formData.append('format', selectedFormat.toLowerCase());
 
       try {
         const response = await axios.post(
