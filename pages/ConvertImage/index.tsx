@@ -8,8 +8,6 @@ import docLogo from '../../public/image_icon.png';
 import docxLogo from '../../public/image_icon.png';
 import { Select, SelectItem } from '@nextui-org/react'; // import Select from your UI library
 require('dotenv').config();
-import Footer from '../Footer';
-import Header from '../Header';
 import '../../app/globals.css';
 
 export default function ConvertImage() {
@@ -70,6 +68,16 @@ export default function ConvertImage() {
     }
   };
 
+  function shortenFilename(filename: string) {
+    const name = filename.split('.')[0];
+    const extension = filename.split('.')[1];
+  
+    if (name.length > 10) {
+      return name.slice(0, 4) + '...' + name.slice(-4) + '.' + extension;
+    }
+    return filename;
+  }
+
   return (
     <main>
       <div className="flex flex-col items-center justify-between p-4 md:p-24">
@@ -83,7 +91,7 @@ export default function ConvertImage() {
           {file ? (
             <div>
               <Image src={file.name.endsWith('.doc') ? docLogo : docxLogo} alt="filetype logo" width={50} height={50} />
-              <p>{file.name}</p>
+              <p>{shortenFilename(file.name)}</p>
             </div>
           ) : isDragActive ? (
             <p className="text-center text-blue-500 font-bold">Drop the files here ...</p>
