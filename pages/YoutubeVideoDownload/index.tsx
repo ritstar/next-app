@@ -7,7 +7,7 @@ export default function YoutubeVideoDownload() {
     async function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
       
-        const response = await fetch(`process.env.CYCLIC_URL/YoutubeVideoDownload?url=${encodeURIComponent(url)}`);
+        const response = await fetch(`${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${encodeURIComponent(url)}`);
         const data = await response.json();
       
         setVideoData(data);
