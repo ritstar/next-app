@@ -8,10 +8,9 @@ export default function Header() {
 
     // Replace javascript:void(0) path with your path
     const navigation = [
-        { title: "Home", path: "/ConvertImage" },
-        { title: "jpg2png", path: "javascript:void(0)" },
-        { title: "png2jpg", path: "javascript:void(0)" },
-        { title: "About us", path: "https://github.com/ritstar" }
+        { title: "Image Converter", path: "/ConvertImage" },
+        { title: "Youtube Video Download", path: "/YoutubeVideoDownload" },
+        { title: "About Me", path: "https://github.com/ritstar" }
     ]
 
     return (

@@ -1,17 +1,26 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import Image from 'next/image';
+import loadingIcon from '../../public/Infinity-loading.svg';
+require('dotenv').config();
 
 export default function YoutubeVideoDownload() {
     const [url, setUrl] = useState('');
     const [videoData, setVideoData] = useState<any[] | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
-      
-        const response = await fetch(`${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${encodeURIComponent(url)}`);
-        const data = await response.json();
-      
-        setVideoData(data);
-      }
+
+        setIsLoading(true);
+        const response = await axios.get(
+            `${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${url}`
+        );
+        console.log(response);
+        const data = await response.data;
+        setVideoData(data.formats);
+        setIsLoading(false);
+    }
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -27,14 +36,32 @@ export default function YoutubeVideoDownload() {
                     />
                     <button type="submit" className="p-2 bg-blue-500 text-white rounded mt-2">Get Download Links</button>
                 </form>
+                {isLoading && (
+                    <Image src={loadingIcon} alt="loading..."/> // Replace this with your loading SVG
+                )}
                 {videoData && (
-                    <div>
-                        {videoData.map((format, index) => (
-                            <a key={index} href={format.url} download className="block p-2 bg-green-500 text-white rounded mb-2">
-                                Download {format.format}
-                            </a>
-                        ))}
-                    </div>
+                    <table className="table-auto">
+                        <thead>
+                            <tr>
+                                <th className="px-4 py-2">Format</th>
+                                <th className="px-4 py-2">Quality</th>
+                                <th className="px-4 py-2">Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {videoData.map((format, index) => (
+                                <tr key={index}>
+                                    <td className="border px-4 py-2">{format.mimeType.split('/')[1].split(';')[0]}</td>
+                                    <td className="border px-4 py-2">{format.qualityLabel}</td>
+                                    <td className="border px-4 py-2">
+                                        <a href={format.url} download className="p-2 bg-green-500 text-white rounded">
+                                            Download
+                                        </a>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 )}
             </div>
         </div>
