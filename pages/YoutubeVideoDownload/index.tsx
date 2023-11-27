@@ -13,8 +13,14 @@ export default function YoutubeVideoDownload() {
         e.preventDefault();
 
         setIsLoading(true);
-        const response = await axios.get(
-            `${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${url}`
+        const response = await axios.post(
+            `${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${url}`, FormData,
+            {
+                headers: {
+                  'Authorization': `Bearer ${process.env.BEARER_TOKEN}`,
+                  'Content-Type': 'multipart/form-data',
+                },
+            }
         );
         console.log(response);
         const data = await response.data;
@@ -50,16 +56,17 @@ export default function YoutubeVideoDownload() {
                         </thead>
                         <tbody>
                             {videoData.map((format, index) => (
+                                format.qualityLabel && (
                                 <tr key={index}>
                                     <td className="border px-4 py-2">{format.mimeType.split('/')[1].split(';')[0]}</td>
                                     <td className="border px-4 py-2">{format.qualityLabel}</td>
                                     <td className="border px-4 py-2">
-                                        <a href={format.url} download className="p-2 bg-green-500 text-white rounded">
+                                        <a href={format.url} target='_blank'download className="p-2 bg-green-500 text-white rounded">
                                             Download
                                         </a>
                                     </td>
                                 </tr>
-                            ))}
+                            )))}
                         </tbody>
                     </table>
                 )}
