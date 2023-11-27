@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import loadingIcon from '../../public/Infinity-loading.svg';
+import ErrorModal from '../ErrorModal';
 require('dotenv').config();
 
 export default function YoutubeVideoDownload() {
     const [url, setUrl] = useState('');
     const [videoData, setVideoData] = useState<any[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     async function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
 
         setIsLoading(true);
+        try{
         const response = await axios.post(
             `${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${url}`, FormData,
             {
@@ -25,6 +28,15 @@ export default function YoutubeVideoDownload() {
         console.log(response);
         const data = await response.data;
         setVideoData(data.formats);
+        }catch (err){
+            console.log(err);
+            
+            if ((err as any).response && (err as any).response.data) {
+                setError((err as any).response.data.error);
+            } else {
+                setError('An unknown error occurred');
+            }
+        }
         setIsLoading(false);
     }
 
@@ -38,7 +50,7 @@ export default function YoutubeVideoDownload() {
                         placeholder="Enter Youtube video URL"
                         value={url}
                         onChange={e => setUrl(e.target.value)}
-                        className="p-2 border rounded w-64"
+                        className="p-2 border rounded w-64" required
                     />
                     <button type="submit" className="p-2 bg-blue-500 text-white rounded mt-2">Get Download Links</button>
                 </form>
@@ -71,6 +83,7 @@ export default function YoutubeVideoDownload() {
                     </table>
                 )}
             </div>
+            <ErrorModal error={error} onClose={() => {setError(null); setIsLoading(false)}} />
         </div>
     );
 }
