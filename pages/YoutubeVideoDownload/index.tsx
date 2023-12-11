@@ -49,7 +49,7 @@ export default function YoutubeVideoDownload() {
                         onChange={e => setUrl(e.target.value)}
                         className="p-2 border rounded w-64" required
                     />
-                    <button type="submit" className="p-2 bg-blue-500 text-white rounded mt-2">Get Download Links</button>
+                    <button type="submit" className="p-2 bg-blue-500 text-white rounded mt-2 mx-2">Get Download Links</button>
                 </form>
                 {isLoading && (
                     <Image src={loadingIcon} alt="loading..." /> // Replace this with your loading SVG
