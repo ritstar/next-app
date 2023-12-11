@@ -13,31 +13,28 @@ export default function YoutubeVideoDownload() {
 
     async function handleSubmit(e: { preventDefault: () => void; }) {
         e.preventDefault();
-
+        setVideoData(null);
         setIsLoading(true);
-        try{
-        const response = await axios.post(
+
+        await axios.post(
             `${process.env.CYCLIC_URL}/YoutubeVideoDownload?url=${url}`, FormData,
             {
                 headers: {
-                  'Authorization': `Bearer ${process.env.BEARER_TOKEN}`,
-                  'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${process.env.BEARER_TOKEN}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             }
-        );
-        console.log(response);
-        const data = await response.data;
-        setVideoData(data.formats);
-        }catch (err){
-            console.log(err);
-            
-            if ((err as any).response && (err as any).response.data) {
-                setError((err as any).response.data.error);
-            } else {
-                setError('An unknown error occurred');
-            }
-        }
-        setIsLoading(false);
+        ).then((response) => {
+            console.log(response);
+            const data = response.data;
+            setVideoData(data.formats);
+        }).catch((err) => {
+            console.log(err.response.data);
+            setError(err.response.data.error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
+
     }
 
     return (
@@ -55,7 +52,7 @@ export default function YoutubeVideoDownload() {
                     <button type="submit" className="p-2 bg-blue-500 text-white rounded mt-2">Get Download Links</button>
                 </form>
                 {isLoading && (
-                    <Image src={loadingIcon} alt="loading..."/> // Replace this with your loading SVG
+                    <Image src={loadingIcon} alt="loading..." /> // Replace this with your loading SVG
                 )}
                 {videoData && (
                     <table className="table-auto">
@@ -69,21 +66,21 @@ export default function YoutubeVideoDownload() {
                         <tbody>
                             {videoData.map((format, index) => (
                                 format.qualityLabel && (
-                                <tr key={index}>
-                                    <td className="border px-4 py-2">{format.mimeType.split('/')[1].split(';')[0]}</td>
-                                    <td className="border px-4 py-2">{format.qualityLabel}</td>
-                                    <td className="border px-4 py-2">
-                                        <a href={format.url} target='_blank'download className="p-2 bg-green-500 text-white rounded">
-                                            Download
-                                        </a>
-                                    </td>
-                                </tr>
-                            )))}
+                                    <tr key={index}>
+                                        <td className="border px-4 py-2">{format.mimeType.split('/')[1].split(';')[0]}</td>
+                                        <td className="border px-4 py-2">{format.qualityLabel}</td>
+                                        <td className="border px-4 py-2">
+                                            <a href={format.url} target='_blank' download className="p-2 bg-green-500 text-white rounded">
+                                                Download
+                                            </a>
+                                        </td>
+                                    </tr>
+                                )))}
                         </tbody>
                     </table>
                 )}
             </div>
-            <ErrorModal error={error} onClose={() => {setError(null); setIsLoading(false)}} />
+            <ErrorModal error={error} onClose={() => { setError(null); setIsLoading(false) }} />
         </div>
     );
 }
